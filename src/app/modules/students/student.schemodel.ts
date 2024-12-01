@@ -27,22 +27,25 @@ const localGuardianSchema = new Schema<LocalGuardian>({
   address: { type: String },
 });
 
-const studentSchema = new Schema<Student>({
-  id: { type: String, required: true },
-  name: userNameSchema,
-  gender: ['male', 'female'],
-  dateOfBirth: { type: String },
-  email: { type: String, required: true },
-  contactNo: { type: String },
-  emergencyContactNo: { type: String },
-  bloogGroup: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
-  presentAddress: { type: String },
-  permanentAddres: { type: String },
-  guardian: guardianSchema,
-  localGuardian: localGuardianSchema,
-  profileImg: { type: String },
-  isActive: ['active', 'blocked'],
-});
+const studentSchema = new Schema<Student>(
+  {
+    id: { type: String, required: true },
+    name: userNameSchema,
+    gender: ['male', 'female'],
+    dateOfBirth: { type: String },
+    email: { type: String, required: true },
+    contactNo: { type: String },
+    emergencyContactNo: { type: String },
+    bloogGroup: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+    presentAddress: { type: String },
+    permanentAddres: { type: String },
+    guardian: guardianSchema,
+    localGuardian: localGuardianSchema,
+    profileImg: { type: String },
+    isActive: ['active', 'blocked'],
+  },
+  { timestamps: true },
+);
 
 // model part
 export const studentModel = model<Student>('Student', studentSchema);
