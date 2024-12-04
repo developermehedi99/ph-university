@@ -1,10 +1,13 @@
 import { model, Schema } from 'mongoose';
+import bcrypt from 'bcrypt';
 import {
   Guardian,
   LocalGuardian,
   Student,
   UserName,
 } from './student.interface';
+import config from '../../config';
+import { number } from 'zod';
 
 const userNameSchema = new Schema<UserName>({
   firstName: {
@@ -63,6 +66,10 @@ const studentSchema = new Schema<Student>(
       type: String,
       required: [true, 'Student ID is required'],
       unique: true,
+    },
+    password: {
+      type: String,
+      required: [true, 'password is required'],
     },
     name: {
       type: userNameSchema,
@@ -133,6 +140,24 @@ const studentSchema = new Schema<Student>(
   },
   { timestamps: true },
 );
+
+// middleware/hook
+
+//document middleware
+studentSchema.pre('save', async function (next) {
+  //hash dat into db
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+  user.password = await bcrypt.hash(user.password, Number(config.bcrypt_salt));
+  next();
+});
+
+studentSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
+});
+
+// query middleware
 
 // model part
 export const studentModel = model<Student>('Student', studentSchema);
