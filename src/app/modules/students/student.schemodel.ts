@@ -7,7 +7,6 @@ import {
   UserName,
 } from './student.interface';
 import config from '../../config';
-import { number } from 'zod';
 
 const userNameSchema = new Schema<UserName>({
   firstName: {
@@ -66,6 +65,12 @@ const studentSchema = new Schema<Student>(
       type: String,
       required: [true, 'Student ID is required'],
       unique: true,
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'user is required'],
+      unique: true,
+      ref: 'userModel',
     },
     password: {
       type: String,
@@ -129,14 +134,6 @@ const studentSchema = new Schema<Student>(
       required: [true, 'Local guardian details are required'],
     },
     profileImg: { type: String },
-    isActive: {
-      type: String,
-      enum: {
-        values: ['active', 'blocked'],
-        message: '{VALUE} is not a valid status',
-      },
-      default: 'active',
-    },
   },
   { timestamps: true },
 );
