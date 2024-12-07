@@ -1,12 +1,12 @@
 import { model, Schema } from 'mongoose';
-import bcrypt from 'bcrypt';
+//import bcrypt from 'bcrypt';
 import {
   Guardian,
   LocalGuardian,
   Student,
   UserName,
 } from './student.interface';
-import config from '../../config';
+//import config from '../../config';
 
 const userNameSchema = new Schema<UserName>({
   firstName: {
@@ -71,10 +71,6 @@ const studentSchema = new Schema<Student>(
       required: [true, 'user is required'],
       unique: true,
       ref: 'userModel',
-    },
-    password: {
-      type: String,
-      required: [true, 'password is required'],
     },
     name: {
       type: userNameSchema,
@@ -141,18 +137,18 @@ const studentSchema = new Schema<Student>(
 // middleware/hook
 
 //document middleware
-studentSchema.pre('save', async function (next) {
-  //hash dat into db
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this;
-  user.password = await bcrypt.hash(user.password, Number(config.bcrypt_salt));
-  next();
-});
+// studentSchema.pre('save', async function (next) {
+//   //hash dat into db
+//   // eslint-disable-next-line @typescript-eslint/no-this-alias
+//   const user = this;
+//   user.password = await bcrypt.hash(user.password, Number(config.bcrypt_salt));
+//   next();
+// });
 
-studentSchema.post('save', function (doc, next) {
-  doc.password = '';
-  next();
-});
+// studentSchema.post('save', function (doc, next) {
+//   doc.password = '';
+//   next();
+// });
 
 // query middleware
 

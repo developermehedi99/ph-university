@@ -13,11 +13,11 @@ const createStudentIntoDB = async (password: string, studentData: Student) => {
   //set student roll
   userData.role = 'student';
   //set manually generated id
-  userData.id = '2030100001';
+  userData.id = '2030100004';
 
   //create user
-  const newUser = await userModel.create(studentData);
-
+  const newUser = await userModel.create(userData);
+  // console.log(newUser);
   //create student
   if (Object.keys(newUser).length) {
     //set id, _id as user
