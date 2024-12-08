@@ -34,47 +34,48 @@ const localGuardianValidationSchema = z.object({
   address: z.string().min(1, { message: 'Local guardian address is required' }),
 });
 
-const studentValidationSchema = z.object({
-  id: z.string().min(1, { message: 'Student ID is required' }),
-  password: z.string().min(4, { message: 'password is required' }),
-  name: userNameValidationSchema,
-  gender: z
-    .enum(['male', 'female', 'others'], {
-      invalid_type_error: "Gender must be 'male', 'female', or 'others'",
-    })
-    .refine((val) => ['male', 'female', 'others'].includes(val), {
-      message: 'Invalid gender value',
+const createStudentValidationSchema = z.object({
+  body: z.object({
+    password: z.string().min(4, { message: 'password is required' }),
+    student: z.object({
+      name: userNameValidationSchema,
+      gender: z
+        .enum(['male', 'female', 'others'], {
+          invalid_type_error: "Gender must be 'male', 'female', or 'others'",
+        })
+        .refine((val) => ['male', 'female', 'others'].includes(val), {
+          message: 'Invalid gender value',
+        }),
+      dateOfBirth: z.string().min(1, { message: 'Date of birth is required' }),
+      email: z
+        .string()
+        .trim()
+        .email({ message: 'Email format is invalid' })
+        .min(1, { message: 'Email is required' }),
+      contactNo: z
+        .string()
+        .regex(/^\d{10}$/, { message: 'Contact number must be 10 digits' }),
+      emergencyContactNo: z.string().regex(/^\d{10}$/, {
+        message: 'Emergency contact number must be 10 digits',
+      }),
+      bloogGroup: z
+        .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'], {
+          invalid_type_error: 'Invalid blood group',
+        })
+        .optional(),
+      presentAddress: z
+        .string()
+        .min(1, { message: 'Present address is required' }),
+      permanentAddres: z
+        .string()
+        .min(1, { message: 'Permanent address is required' }),
+      guardian: guardianValidationSchema,
+      localGuardian: localGuardianValidationSchema,
+      profileImg: z.string().optional(),
     }),
-  dateOfBirth: z.string().min(1, { message: 'Date of birth is required' }),
-  email: z
-    .string()
-    .trim()
-    .email({ message: 'Email format is invalid' })
-    .min(1, { message: 'Email is required' }),
-  contactNo: z
-    .string()
-    .regex(/^\d{10}$/, { message: 'Contact number must be 10 digits' }),
-  emergencyContactNo: z.string().regex(/^\d{10}$/, {
-    message: 'Emergency contact number must be 10 digits',
   }),
-  bloogGroup: z
-    .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'], {
-      invalid_type_error: 'Invalid blood group',
-    })
-    .optional(),
-  presentAddress: z.string().min(1, { message: 'Present address is required' }),
-  permanentAddres: z
-    .string()
-    .min(1, { message: 'Permanent address is required' }),
-  guardian: guardianValidationSchema,
-  localGuardian: localGuardianValidationSchema,
-  profileImg: z.string().optional(),
-  isActive: z
-    .enum(['active', 'blocked'], {
-      invalid_type_error: "Status must be 'active' or 'blocked'",
-    })
-    .optional()
-    .default('active'),
 });
 
-export default studentValidationSchema;
+export const studentValidations = {
+  createStudentValidationSchema,
+};
